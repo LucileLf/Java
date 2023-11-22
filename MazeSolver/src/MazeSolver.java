@@ -2,8 +2,8 @@ import java.util.LinkedList;
 
 public class MazeSolver {
 	static int[][] maze = { //static in order to be accessed in the main without creating an instance
-		{2, 0, 1, 1},
-		{1, 1, 1, 0},
+		{2, 1, 1, 1},
+		{0, 0, 1, 1},
 		{0, 0, 0, 1}
 	};
 	//0: wall	1:path	2:destination
@@ -22,52 +22,73 @@ public class MazeSolver {
 			//changing each visited spot to a 0
 			maze[y][x]  = 0;
 			
-			
 			//going down
-			if(maze[y+1][x] == 2) { 		
-				System.out.println("Moved down. You won!!");
-				return;
-			} else if(maze[y+1][x] == 1) {
-				System.out.println("Moved down");
-				path.push(new Position(y+1, x)); //adding a position
-				continue;
+			if (isValid(y+1, x)) {
+				if(maze[y+1][x] == 2) { 		
+					System.out.println("Moved down. You won!!");
+					return;
+				} else if(maze[y+1][x] == 1) {
+					System.out.println("Moved down");
+					path.push(new Position(y+1, x)); //adding a position
+					continue;
+				}
 			}
 			
 			//going left
-			if(maze[y][x-1] == 2) { 		
-				System.out.println("Moved left. You won!!");
-				return;
-			} else if(maze[y][x-1] == 1) {
-				System.out.println("Moved left");
-				path.push(new Position(y, x-1)); //adding a position
-				continue;
+			if (isValid(y, x-1)) {
+				if(maze[y][x-1] == 2) { 		
+					System.out.println("Moved left. You won!!");
+					return;
+				} else if(maze[y][x-1] == 1) {
+					System.out.println("Moved left");
+					path.push(new Position(y, x-1)); //adding a position
+					continue;
+				}
 			}
 			
 			//going up
-			if(maze[y-1][x] == 2) { 		
-				System.out.println("Moved up. You won!!");
-				return;
-			} else if(maze[y-1][x] == 1) {
-				System.out.println("Moved up");
-				path.push(new Position(y-1, x)); //adding a position
-				continue;
+			if (isValid(y-1, x)) {
+				if(maze[y-1][x] == 2) { 		
+					System.out.println("Moved up. You won!!");
+					return;
+				} else if(maze[y-1][x] == 1) {
+					System.out.println("Moved up");
+					path.push(new Position(y-1, x)); //adding a position
+					continue;
+				}
 			}
 			
 			//going right
-			if(maze[y][x+1] == 2) { 		
-				System.out.println("Moved right. You won!!");
+			if (isValid(y, x+1)) {
+				if(maze[y][x+1] == 2) { 		
+					System.out.println("Moved right. You won!!");
+					return;
+				} else if(maze[y][x+1] == 1) {
+					System.out.println("Moved right");
+					path.push(new Position(y, x+1)); //adding a position
+					continue;
+				}
+			}
+			
+			path.pop();//if unable to move in any direction, backtrack: remove current spot from stack
+			System.out.println("Moved back!");
+			
+			if(path.size() <= 0) { //
+				System.out.println("No path");
 				return;
-			} else if(maze[y][x+1] == 1) {
-				System.out.println("Moved right");
-				path.push(new Position(y, x+1)); //adding a position
-				continue;
 			}
 		}
 
-		
+	}
 	
-	
-	};
-	
-	
+	public static boolean isValid(int y, int x) { //checking for outer bounds
+		if(y < 0 || 
+		   y >= maze.length ||
+		   x < 0 ||
+		   x >= maze[y].length //for x, need to check the length of the current row
+		) {
+			return false;
+		}
+		return true;
+	}
 }
